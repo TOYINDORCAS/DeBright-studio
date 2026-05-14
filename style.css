@@ -1,0 +1,105 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 40px;
+    background-color: #000000; /* Black studio background */
+    color: #90ee90; /* Light green text */
+}
+
+h1 {color: #90ee90; /* Light green */}
+
+form {margin: 20px;}
+
+input, select {
+    padding: 10px;
+    width: 300px;
+    border: 1px solid #90ee90;
+    background-color: #111; /* Dark input background */
+    color: #90ee90; /* Light green text */}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #90ee90;}    
+
+/* Generate / Refine button */
+button {
+    padding: 10px 20px;
+    margin-left: 10px;
+     background-color: #FFD700; /* Yellow */
+    color: #000; /* Black text for contrast */
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;}
+
+/* Studio branding */
+#studioBrand {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #90ee90; /* Light green */
+    font-family: Arial, sans-serif;
+}
+
+button:hover {
+    background-color: #FFC107; /* Slightly darker yellow on hover */
+}
+
+/* Save button styled differently (green) */
+#saveBtn {
+    padding: 10px 20px;
+    margin-top: 15px;
+    background-color: #28a745; /* Green */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#saveBtn:hover {
+    background-color: #1e7e34;
+}
+
+.spinner {
+    margin: 20px auto;
+     border: 8px solid #333; /* Dark grey */
+    border-top: 8px solid #0078d7; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    display :none;
+}
+Generated Image {
+    max-width:500px;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+   
+   
+    form {
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%; 
+    max-width: 350px; 
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+button:active {
+    transform: scale(0.98);
+}
+.upload-label {
+    display: block; 
+    margin-top: 10px;
+    font-weight: bold;
+}
