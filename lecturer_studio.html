@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Studio</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        form {
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 320px;
+        }
+
+        input,
+        select,
+        button {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .spinner {
+            display: none;
+            margin: 20px auto;
+            border: 5px solid #ddd;
+            border-top: 5px solid #333;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #preview img,
+        #generatedImage {
+            margin-top: 20px;
+            max-width: 400px;
+            border-radius: 10px;
+        }
+
+        #studioBrand {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .selection-info {
+            margin-top: 10px;
+            color: #444;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Studio Branding -->
+    <div id="studioBrand">DeBright Studio</div>
+
+    <h1>Image Generator</h1>
+
+    <form
+        action="/generate"
+        method="post"
+        id="generateForm"
+        enctype="multipart/form-data"
+    >
+
+        <!-- Prompt -->
+        <input
+            type="text"
+            name="text"
+            placeholder="Enter your prompt"
+            required
+        >
+
+        <!-- Upload -->
+         
+        <label for="uploadImage" >Select Image:</label>
+        <input
+            type="file"
+            name="personal_image"
+            accept="image/*"
+            id="uploadImage"
+        >
+
+        <!-- Outfit -->
+        <label for="outfit">Choose Outfit:</label>
+
+        <select name="outfit" id="outfit">
+            <option value="">None</option>
+            <option value="corporate outfit">Corporate Outfit</option>
+            <option value="african native outfit">African Native Outfit</option>
+            <option value="casual outfit">Casual Outfit</option>
+            <option value="academic gown">Academic Gown</option>
+        </select>
+
+        <!-- LoRA -->
+        <label for="lora">Choose LoRA:</label>
+
+        <select name="lora" id="lora">
+            <option value="">None</option>
+            <option value="anime_lora">Anime Style</option>
+            <option value="portrait_lora">Portrait Style</option>
+            <option value="fantasy_lora">Fantasy Art</option>
+            <option value="popart_lora">Pop Art</option>
+        </select>
+
+        <button type="submit">
+            Generate / Refine
+        </button>
+    </form>
+
+    <!-- Spinner -->
+    <div id="spinner" class="spinner"></div>
+
+    <!-- Preview -->
+    <div id="preview">
+        <p>Your uploaded image preview will appear here.</p>
+    </div>
+
+    <!-- Selection display -->
+    <div class="selection-info">
+        <p id="outfitInfo"></p>
+        <p id="loraInfo"></p>
+    </div>
+
+    <!-- Generated image -->
+    {% if image_url %}
+
+        <h3>
+            Generated Image for:
+            "{{ prompt | default('Your Prompt') }}"
+        </h3>
+
+        <img
+            id="generatedImage"
+            src="{{ image_url }}"
+            alt="Generated Image"
+        >
+
+        <br><br>
+
+        <!-- Save button -->
+        <button id="saveBtn">
+            Save Image
+        </button>
+
+    {% endif %}
+
+    <script>
+
+        const form = document.getElementById("generateForm");
+        const spinner = document.getElementById("spinner");
+
+        const uploadInput = document.getElementById("uploadImage");
+
+        const outfitSelect = document.getElementById("outfit");
+        const loraSelect = document.getElementById("lora");
+
+        const preview = document.getElementById("preview");
+
+        const outfitInfo = document.getElementById("outfitInfo");
+        const loraInfo = document.getElementById("loraInfo");
+
+        // Show spinner
+        form.addEventListener("submit", () => {
+            spinner.style.display = "block";
+        });
+
+        // Image preview
+        uploadInput.addEventListener("change", (event) => {
+
+            const file = event.target.files[0];
+
+            if (file) {
+
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+
+                    preview.innerHTML = `
+                        <img
+                            src="${e.target.result}"
+                            alt="Preview Image"
+                            width="300"
+                        >
+                    `;
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Outfit display
+        outfitSelect.addEventListener("change", () => {
+
+            const outfit = outfitSelect.value;
+
+            if (outfit) {
+                outfitInfo.textContent =
+                    `Selected outfit: ${outfit}`;
+            } else {
+                outfitInfo.textContent = "";
+            }
+        });
+
+        // LoRA display
+        loraSelect.addEventListener("change", () => {
+
+            const lora = loraSelect.value;
+
+            if (lora) {
+                loraInfo.textContent =
+                    `Selected LoRA: ${lora}`;
+            } else {
+                loraInfo.textContent = "";
+            }
+        });
+
+        // Save image
+        const saveBtn = document.getElementById("saveBtn");
+
+        if (saveBtn) {
+
+            saveBtn.addEventListener("click", () => {
+
+                const image =
+                    document.getElementById("generatedImage");
+
+                if (!image) return;
+
+                const link =
+                    document.createElement("a");
+
+                link.href = image.src;
+                link.download = "generated_image.png";
+
+                document.body.appendChild(link);
+
+                link.click();
+
+                document.body.removeChild(link);
+            });
+        }
+
+        // Hide spinner when page fully loads
+        window.onload = () => {
+            spinner.style.display = "none";
+        };
+
+    </script>
+
+</body>
+</html>
